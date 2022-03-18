@@ -1,18 +1,21 @@
 <template>
   <div class="todo-list">
-    <ul v-if="auth.isAuthenticated">
+    <TodoForm />
+    <!-- <ul v-if="auth.auth.isAuthenticated"> -->
+    <ul v-if="isAuthenticated">
       <li
         v-for="todo in todos"
         :key="todo.id"
-        :class="todo.done ? 'completed' : ''"
+        :class="todo.completed ? 'completed' : ''"
       >
         {{ todo.title }}
 
         <input
           type="checkbox"
-          :checked="todo.done"
+          :checked="todo.completed"
           @change="MARK_COMPLETE(todo.id)"
         />
+        <button @click="deleteTodo(todo.id)">Delete</button>
       </li>
     </ul>
     <p v-else style="text-align: center">Not authorised</p>
@@ -20,11 +23,23 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import TodoForm from "./TodoForm.vue";
 export default {
   name: "To-dos",
-  computed: mapState(["todos", "auth"]),
-  methods: mapMutations(['MARK_COMPLETE'])
+  components: { TodoForm },
+  // computed: {...mapState(["todos", "auth"]),},
+  computed: { ...mapGetters(["todos", "isAuthenticated"]) },
+  created() {
+    this.getTodos();
+  },
+  methods: {
+    ...mapMutations(["MARK_COMPLETE"]),
+    // deleteTodo(todoId) {
+    //   this.$store.dispatch('deleteTodo', todoId, { root: true });
+    // },
+    ...mapActions(["deleteTodo", "getTodos"]),
+  },
 };
 </script>
 

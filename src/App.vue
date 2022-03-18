@@ -18,7 +18,7 @@ export default {
     Todos,
     Navbar,
     StatusBar,
-    ProgressBar
+    ProgressBar,
   },
 };
 </script>
